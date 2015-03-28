@@ -3,4 +3,10 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="set_nickname">Nickname</string>
+    <string name="set_nick">Set your nickname:</string>
+    <string name="next">Next</string>
+
+    <string name="nick_in_use">This nickname is in use!</string>
+
 </resources>
