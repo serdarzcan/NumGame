@@ -1,24 +1,38 @@
 package pro.onur.numgame;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import pro.onur.myviews.MyButton;
 import pro.onur.myviews.MyEditText;
 import pro.onur.myviews.MyTextView;
 
 
-public class MainActivity extends ActionBarActivity {
+public class SetNickname extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_nickname);
 
+        User user = new User();
+
         MyTextView setNick = (MyTextView) findViewById(R.id.text_SetNickname);
 
         MyEditText editNick = (MyEditText) findViewById(R.id.editText_setNickname);
+
+        MyButton nextButton_SN = (MyButton) findViewById(R.id.button_sN_Next);
+        nextButton_SN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SetNickname.this, pro.onur.numgame.Menu.class);
+                startActivity(i);
+            }
+        });
 
     }
 
@@ -44,4 +58,10 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private boolean checkNicknameAvailiblity(String nick) {
+
+        return true;
+    }
+
 }
