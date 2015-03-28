@@ -1,70 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#4d797b80">
 
-    <TextView
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:id="@+id/imageButton"
+        android:src="@drawable/training"
+        android:layout_above="@+id/imageButton2"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:id="@+id/imageButton2"
+        android:src="@drawable/multiplayer"
+        android:layout_above="@+id/imageButton3"
+        android:layout_alignLeft="@+id/imageButton3"
+        android:layout_alignStart="@+id/imageButton3"
+        android:layout_alignRight="@+id/imageButton3"
+        android:layout_alignEnd="@+id/imageButton3"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:id="@+id/imageButton3"
+        android:src="@drawable/ranking"
+        android:layout_above="@+id/imageButton4"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:id="@+id/imageButton4"
+        android:src="@drawable/options"
+        android:layout_above="@+id/imageButton5"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:id="@+id/imageButton5"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/tutorial"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp" />
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Training"
-        android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/imageButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="130dp"
-        android:textSize="30sp" />
+        android:src="@drawable/fb_logo"
+        android:padding="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Multi Player"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Ranking"
-        android:id="@+id/textView5"
-        android:layout_below="@+id/textView4"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Friends"
-        android:id="@+id/textView6"
-        android:layout_below="@+id/textView5"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Options"
-        android:id="@+id/textView7"
-        android:layout_below="@+id/textView6"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Tutorial"
-        android:id="@+id/textView8"
-        android:layout_below="@+id/textView7"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:layout_marginTop="10dp" />
 </RelativeLayout>
