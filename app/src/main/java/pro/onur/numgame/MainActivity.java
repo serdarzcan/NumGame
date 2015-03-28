@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import pro.onur.myviews.MyEditText;
+import pro.onur.myviews.MyTextView;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -12,6 +15,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_nickname);
+
+        MyTextView setNick = (MyTextView) findViewById(R.id.text_SetNickname);
+
+        MyEditText editNick = (MyEditText) findViewById(R.id.editText_setNickname);
+
     }
 
 

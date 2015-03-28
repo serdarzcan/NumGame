@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <EditText
+    <pro.onur.myviews.MyEditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText_setNickname"
@@ -12,7 +12,7 @@
         android:padding="10dp"
         android:layout_margin="10dp" />
 
-    <TextView
+    <pro.onur.myviews.MyTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_nick"
@@ -22,9 +22,11 @@
         android:layout_alignStart="@+id/editText_setNickname"
         android:layout_alignRight="@+id/editText_setNickname"
         android:layout_alignEnd="@+id/editText_setNickname"
-        android:textSize="30dp" />
+        android:textSize="30dp"
+        android:typeface="normal"
+        android:textStyle="normal" />
 
-    <Button
+    <pro.onur.myviews.MyButton
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/next"
@@ -34,7 +36,7 @@
         android:padding="5dp"
         android:layout_margin="5dp" />
 
-    <TextView
+    <pro.onur.myviews.MyTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nick_in_use"
