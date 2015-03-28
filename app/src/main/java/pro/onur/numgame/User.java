@@ -9,7 +9,7 @@ public class User {
     /**
      * Users nickname
      */
-    @com.google.gson.annotations.SerializedName("nick")
+    @com.google.gson.annotations.SerializedName("nickname")
     private String nickname;
 
     /**
@@ -28,31 +28,31 @@ public class User {
      * Users experience
      */
     @com.google.gson.annotations.SerializedName("exp")
-    private int xp;
+    private int exp;
 
     /**
      * Users total play time
      */
-    @com.google.gson.annotations.SerializedName("time")
+    @com.google.gson.annotations.SerializedName("total_time")
     private int total_time;
 
     /**
      * Users total guess count
      */
-    @com.google.gson.annotations.SerializedName("guess")
+    @com.google.gson.annotations.SerializedName("total_guess")
     private int total_guess;
 
     /**
      * Users total game count
      */
-    @com.google.gson.annotations.SerializedName("game")
-    private int total_game;
+    @com.google.gson.annotations.SerializedName("games_played")
+    private int games_played;
 
     /**
      * Users total won game
      */
     @com.google.gson.annotations.SerializedName("won")
-    private int total_won;
+    private int won;
 
     /**
      * User constructor
@@ -73,11 +73,11 @@ public class User {
         this.setNickname(nick);
         //this.setId(id);
         this.setLevel(0);
-        this.setXp(0);
+        this.setExp(0);
         this.setTotal_time(0);
         this.setTotal_guess(0);
-        this.setTotal_game(0);
-        this.setTotal_won(0);
+        this.setGames_played(0);
+        this.setWon(0);
     }
 
     public String getNickname() {
@@ -104,12 +104,12 @@ public class User {
         this.level = level;
     }
 
-    public int getXp() {
-        return xp;
+    public int getExp() {
+        return exp;
     }
 
-    public void setXp(int xp) {
-        this.xp = xp;
+    public void setExp(int exp) {
+        this.exp = exp;
     }
 
     public int getTotal_time() {
@@ -128,20 +128,20 @@ public class User {
         this.total_guess = total_guess;
     }
 
-    public int getTotal_game() {
-        return total_game;
+    public int getGames_played() {
+        return games_played;
     }
 
-    public void setTotal_game(int total_game) {
-        this.total_game = total_game;
+    public void setGames_played(int games_played) {
+        this.games_played = games_played;
     }
 
-    public int getTotal_won() {
-        return total_won;
+    public int getWon() {
+        return won;
     }
 
-    public void setTotal_won(int total_won) {
-        this.total_won = total_won;
+    public void setWon(int won) {
+        this.won = won;
     }
 
     /*public void addUser(View view) {

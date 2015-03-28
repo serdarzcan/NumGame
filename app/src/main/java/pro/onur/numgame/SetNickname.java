@@ -1,6 +1,7 @@
 package pro.onur.numgame;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,8 +13,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.MobileServiceList;
+import com.microsoft.windowsazure.mobileservices.http.NextServiceFilterCallback;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilter;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterRequest;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.net.MalformedURLException;
@@ -38,6 +47,11 @@ public class SetNickname extends ActionBarActivity {
      * Mobile Service Table used to access data
      */
     private MobileServiceTable<User> mUserTable;
+
+    /**
+     * Progress spinner to use for table operations
+     */
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +109,12 @@ public class SetNickname extends ActionBarActivity {
             // Get the Mobile Service Table instance to use
             mUserTable = mClient.getTable(User.class);
 
-            mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);
+            //mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);
 
             // Create an adapter to bind the items with the view
-            mAdapter = new ToDoItemAdapter(this, R.layout.row_list_to_do);
+            /*mAdapter = new ToDoItemAdapter(this, R.layout.row_list_to_do);
             ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
-            listViewToDo.setAdapter(mAdapter);
+            listViewToDo.setAdapter(mAdapter);*/
 
             // Load the items from the Mobile Service
             refreshItemsFromTable();
@@ -134,13 +148,74 @@ public class SetNickname extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean checkNicknameAvailability(String nick) {
+    private boolean checkNicknameAvailability(final String nick) {
+        // Get the items that weren't marked as completed and add them in the
+        // adapter
+        new AsyncTask<Void, Void, Void>() {
 
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    final MobileServiceList<User> result = mUserTable.where().field("nickname").eq(nick).execute().get();
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                           /* mAdapter.clear();
+
+                            for (ToDoItem item : result) {
+                                mAdapter.add(item);
+                            }*/
+                        }
+                    });
+                } catch (Exception exception) {
+                    createAndShowDialog(exception, "Error");
+                }
+                return null;
+            }
+        }.execute();
         return false;
     }
 
     private void addUser(User user) {
 
+    }
+
+    private class ProgressFilter implements ServiceFilter {
+
+        @Override
+        public ListenableFuture<ServiceFilterResponse> handleRequest(
+                ServiceFilterRequest request, NextServiceFilterCallback next) {
+
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                }
+            });
+
+            SettableFuture<ServiceFilterResponse> result = SettableFuture.create();
+            try {
+                ServiceFilterResponse response = next.onNext(request).get();
+                result.set(response);
+            } catch (Exception exc) {
+                result.setException(exc);
+            }
+
+            dismissProgressBar();
+            return result;
+        }
+
+        private void dismissProgressBar() {
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.GONE);
+                }
+            });
+        }
     }
 
 }
