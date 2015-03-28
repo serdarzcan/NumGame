@@ -9,17 +9,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Sign Up With Mail Adress!"
+        android:text="Signup With Mail Adress!"
         android:id="@+id/textView"
         android:gravity="center"
         android:textSize="30sp"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="150dp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/editText" />
+        android:id="@+id/editText"
+        android:text="\@"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="OR Signup With Facebook"
+        android:id="@+id/textView2"
+        android:textSize="30sp"
+        android:layout_marginTop="20dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/fb_logo"
+        android:layout_margin="50dp" />
 
 </TableLayout>
