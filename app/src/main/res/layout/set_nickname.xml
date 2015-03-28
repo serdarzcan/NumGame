@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_setNickname"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/set_nickname"
+        android:padding="10dp"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_nick"
+        android:id="@+id/text_SetNickname"
+        android:layout_above="@+id/editText_setNickname"
+        android:layout_alignLeft="@+id/editText_setNickname"
+        android:layout_alignStart="@+id/editText_setNickname"
+        android:layout_alignRight="@+id/editText_setNickname"
+        android:layout_alignEnd="@+id/editText_setNickname"
+        android:textSize="30dp" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        android:id="@+id/button_sN_Next"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:layout_margin="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nick_in_use"
+        android:id="@+id/text_InUse"
+        android:layout_below="@+id/editText_setNickname"
+        android:layout_alignLeft="@+id/editText_setNickname"
+        android:layout_alignStart="@+id/editText_setNickname"
+        android:layout_alignRight="@+id/editText_setNickname"
+        android:layout_alignEnd="@+id/editText_setNickname" />
+
+</RelativeLayout>
