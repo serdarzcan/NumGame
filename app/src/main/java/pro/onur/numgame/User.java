@@ -69,9 +69,9 @@ public class User {
      * @param id
      *            The item id
      */
-    public User(String nick, String id) {
+    public User(String nick) {
         this.setNickname(nick);
-        this.setId(id);
+        //this.setId(id);
         this.setLevel(0);
         this.setXp(0);
         this.setTotal_time(0);

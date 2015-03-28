@@ -3,9 +3,24 @@ package pro.onur.numgame;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.MobileServiceList;
+import com.microsoft.windowsazure.mobileservices.http.NextServiceFilterCallback;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilter;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterRequest;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import pro.onur.myviews.MyButton;
 import pro.onur.myviews.MyEditText;
@@ -14,23 +29,52 @@ import pro.onur.myviews.MyTextView;
 
 public class SetNickname extends ActionBarActivity {
 
+    private boolean canGoNext = false;
+    private Animation shakeAnim;
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_nickname);
 
-        User user = new User();
+        shakeAnim = AnimationUtils.loadAnimation(this,R.anim.shake);
 
-        MyTextView setNick = (MyTextView) findViewById(R.id.text_SetNickname);
+        MyTextView inUse = (MyTextView) findViewById(R.id.text_InUse);
+        inUse.setVisibility(View.INVISIBLE);
+
+        final MyTextView setNick = (MyTextView) findViewById(R.id.text_SetNickname);
 
         MyEditText editNick = (MyEditText) findViewById(R.id.editText_setNickname);
+        editNick.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                canGoNext = checkNicknameAvailablity(s.toString());
+            }
+        });
 
         MyButton nextButton_SN = (MyButton) findViewById(R.id.button_sN_Next);
         nextButton_SN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SetNickname.this, pro.onur.numgame.Menu.class);
-                startActivity(i);
+                if (canGoNext) {
+                    user = new User(setNick.getText().toString());
+                    addUser(user);
+                    Intent i = new Intent(SetNickname.this, pro.onur.numgame.Menu.class);
+                    startActivity(i);
+                } else {
+                    setNick.startAnimation(shakeAnim);
+                }
             }
         });
 
@@ -59,9 +103,13 @@ public class SetNickname extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean checkNicknameAvailiblity(String nick) {
+    private boolean checkNicknameAvailablity(String nick) {
 
-        return true;
+        return false;
+    }
+
+    private void addUser(User user) {
+
     }
 
 }

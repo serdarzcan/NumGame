@@ -11,6 +11,6 @@ public class Menu extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.set_nickname);
+        setContentView(R.layout.menu);
     }
 }
