@@ -1,5 +1,6 @@
 package pro.onur.numgame;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -34,9 +35,10 @@ import pro.onur.myviews.MyTextView;
 
 public class SetNickname extends ActionBarActivity {
 
-    private boolean canGoNext = false;
+    public boolean canGoNext = false;
+    public MyTextView inUse;
+
     private Animation shakeAnim;
-    private User user;
 
     /**
      * Mobile Service Client reference
@@ -60,12 +62,26 @@ public class SetNickname extends ActionBarActivity {
 
         shakeAnim = AnimationUtils.loadAnimation(this,R.anim.shake);
 
-        MyTextView inUse = (MyTextView) findViewById(R.id.text_InUse);
-        inUse.setVisibility(View.INVISIBLE);
+        inUse = (MyTextView) findViewById(R.id.text_InUse);
+        inUse.setVisibility(View.GONE);
 
         final MyTextView setNick = (MyTextView) findViewById(R.id.text_SetNickname);
 
-        MyEditText editNick = (MyEditText) findViewById(R.id.editText_setNickname);
+        final MyButton nextButton_SN = (MyButton) findViewById(R.id.button_sN_Next);
+        nextButton_SN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (canGoNext) {
+                    addUser(setNick.getText().toString());
+                    Intent i = new Intent(SetNickname.this, pro.onur.numgame.Menu.class);
+                    startActivity(i);
+                } else {
+                    setNick.startAnimation(shakeAnim);
+                }
+            }
+        });
+
+        final MyEditText editNick = (MyEditText) findViewById(R.id.editText_setNickname);
         editNick.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -74,26 +90,17 @@ public class SetNickname extends ActionBarActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                inUse.setVisibility(View.GONE);
+                if (s.length() < 3) {
+                    nextButton_SN.setClickable(false);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                canGoNext = checkNicknameAvailability(s.toString());
-            }
-        });
-
-        MyButton nextButton_SN = (MyButton) findViewById(R.id.button_sN_Next);
-        nextButton_SN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (canGoNext) {
-                    user = new User(setNick.getText().toString());
-                    addUser(user);
-                    Intent i = new Intent(SetNickname.this, pro.onur.numgame.Menu.class);
-                    startActivity(i);
-                } else {
-                    setNick.startAnimation(shakeAnim);
+                checkNicknameAvailability(s.toString());
+                if (!canGoNext) {
+                    inUse.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -117,7 +124,7 @@ public class SetNickname extends ActionBarActivity {
             listViewToDo.setAdapter(mAdapter);*/
 
             // Load the items from the Mobile Service
-            refreshItemsFromTable();
+            //refreshItemsFromTable();
 
         } catch (MalformedURLException e) {
             createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
@@ -148,9 +155,8 @@ public class SetNickname extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean checkNicknameAvailability(final String nick) {
-        // Get the items that weren't marked as completed and add them in the
-        // adapter
+    private void checkNicknameAvailability(final String nick) {
+
         new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -161,11 +167,11 @@ public class SetNickname extends ActionBarActivity {
 
                         @Override
                         public void run() {
-                           /* mAdapter.clear();
-
-                            for (ToDoItem item : result) {
-                                mAdapter.add(item);
-                            }*/
+                            if (result.isEmpty()){
+                                canGoNext =  true;
+                            } else {
+                                canGoNext = false;
+                            }
                         }
                     });
                 } catch (Exception exception) {
@@ -174,11 +180,69 @@ public class SetNickname extends ActionBarActivity {
                 return null;
             }
         }.execute();
-        return false;
     }
 
-    private void addUser(User user) {
+    private void addUser(String nick) {
+        if (mClient == null) {
+            return;
+        }
 
+        // Create a new user
+        final User user = new User(nick);
+
+        // Insert the new item
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    mUserTable.insert(user).get();
+                    if (!user.getNickname().isEmpty()) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                //mAdapter.add(item);
+                            }
+                        });
+                    }
+                } catch (Exception exception) {
+                    createAndShowDialog(exception, "Error");
+                }
+                return null;
+            }
+        }.execute();
+
+    }
+
+    /**
+     * Creates a dialog and shows it
+     *
+     * @param exception
+     *            The exception to show in the dialog
+     * @param title
+     *            The dialog title
+     */
+    private void createAndShowDialog(Exception exception, String title) {
+        Throwable ex = exception;
+        if(exception.getCause() != null){
+            ex = exception.getCause();
+        }
+        createAndShowDialog(ex.getMessage(), title);
+    }
+
+    /**
+     * Creates a dialog and shows it
+     *
+     * @param message
+     *            The dialog message
+     * @param title
+     *            The dialog title
+     */
+    private void createAndShowDialog(String message, String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(message);
+        builder.setTitle(title);
+        builder.create().show();
     }
 
     private class ProgressFilter implements ServiceFilter {
@@ -191,7 +255,10 @@ public class SetNickname extends ActionBarActivity {
 
                 @Override
                 public void run() {
-                    if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                    if (mProgressBar != null) {
+                        inUse.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                    }
                 }
             });
 
