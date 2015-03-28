@@ -10,17 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.MobileServiceList;
-import com.microsoft.windowsazure.mobileservices.http.NextServiceFilterCallback;
-import com.microsoft.windowsazure.mobileservices.http.ServiceFilter;
-import com.microsoft.windowsazure.mobileservices.http.ServiceFilterRequest;
-import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+
+import java.net.MalformedURLException;
 
 import pro.onur.myviews.MyButton;
 import pro.onur.myviews.MyEditText;
@@ -32,6 +28,16 @@ public class SetNickname extends ActionBarActivity {
     private boolean canGoNext = false;
     private Animation shakeAnim;
     private User user;
+
+    /**
+     * Mobile Service Client reference
+     */
+    private MobileServiceClient mClient;
+
+    /**
+     * Mobile Service Table used to access data
+     */
+    private MobileServiceTable<User> mUserTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +65,7 @@ public class SetNickname extends ActionBarActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                canGoNext = checkNicknameAvailablity(s.toString());
+                canGoNext = checkNicknameAvailability(s.toString());
             }
         });
 
@@ -77,6 +83,31 @@ public class SetNickname extends ActionBarActivity {
                 }
             }
         });
+
+        try {
+            // Create the Mobile Service Client instance, using the provided
+            // Mobile Service URL and key
+            mClient = new MobileServiceClient(
+                    "https://numgame.azure-mobile.net/",
+                    "wZNxxbOuSHDVuSDDlYlzjdvzGvuQcK88",
+                    this).withFilter(new ProgressFilter());
+
+            // Get the Mobile Service Table instance to use
+            mUserTable = mClient.getTable(User.class);
+
+            mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);
+
+            // Create an adapter to bind the items with the view
+            mAdapter = new ToDoItemAdapter(this, R.layout.row_list_to_do);
+            ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
+            listViewToDo.setAdapter(mAdapter);
+
+            // Load the items from the Mobile Service
+            refreshItemsFromTable();
+
+        } catch (MalformedURLException e) {
+            createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
+        }
 
     }
 
@@ -103,7 +134,7 @@ public class SetNickname extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean checkNicknameAvailablity(String nick) {
+    private boolean checkNicknameAvailability(String nick) {
 
         return false;
     }
