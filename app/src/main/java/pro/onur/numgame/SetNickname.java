@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,23 +66,25 @@ public class SetNickname extends ActionBarActivity {
         inUse = (MyTextView) findViewById(R.id.text_InUse);
         inUse.setVisibility(View.GONE);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
+        mProgressBar.setVisibility(View.GONE);
+
         final MyTextView setNick = (MyTextView) findViewById(R.id.text_SetNickname);
+        final MyEditText editNick = (MyEditText) findViewById(R.id.editText_setNickname);
 
         final MyButton nextButton_SN = (MyButton) findViewById(R.id.button_sN_Next);
         nextButton_SN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (canGoNext) {
-                    addUser(setNick.getText().toString());
-                    Intent i = new Intent(SetNickname.this, pro.onur.numgame.Menu.class);
-                    startActivity(i);
+                    addUser(editNick.getText().toString());
+
                 } else {
                     setNick.startAnimation(shakeAnim);
                 }
             }
         });
 
-        final MyEditText editNick = (MyEditText) findViewById(R.id.editText_setNickname);
         editNick.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -90,17 +93,22 @@ public class SetNickname extends ActionBarActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                inUse.setVisibility(View.GONE);
+                /*inUse.setVisibility(View.GONE);
+                System.out.println(count);
                 if (s.length() < 3) {
                     nextButton_SN.setClickable(false);
-                }
+                } else {
+                    nextButton_SN.setClickable(true);
+                }*/
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                checkNicknameAvailability(s.toString());
-                if (!canGoNext) {
-                    inUse.setVisibility(View.VISIBLE);
+                if (s.length() < 3) {
+                    checkNicknameAvailability(s.toString());
+                    if (!canGoNext) {
+                        inUse.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -116,6 +124,8 @@ public class SetNickname extends ActionBarActivity {
             // Get the Mobile Service Table instance to use
             mUserTable = mClient.getTable(User.class);
 
+            //Log.d("database","database:"+mUserTable.toString());
+
             //mTextNewToDo = (EditText) findViewById(R.id.textNewToDo);
 
             // Create an adapter to bind the items with the view
@@ -127,7 +137,8 @@ public class SetNickname extends ActionBarActivity {
             //refreshItemsFromTable();
 
         } catch (MalformedURLException e) {
-            createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
+            //createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
+            e.printStackTrace();
         }
 
     }
@@ -163,19 +174,22 @@ public class SetNickname extends ActionBarActivity {
             protected Void doInBackground(Void... params) {
                 try {
                     final MobileServiceList<User> result = mUserTable.where().field("nickname").eq(nick).execute().get();
+                    System.out.println("result size: " + result.size());
                     runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
-                            if (result.isEmpty()){
-                                canGoNext =  true;
+                            if (result.size() == 0) {
+                                canGoNext = true;
                             } else {
                                 canGoNext = false;
+                                inUse.setVisibility(View.VISIBLE);
                             }
                         }
                     });
-                } catch (Exception exception) {
-                    createAndShowDialog(exception, "Error");
+                } catch (Exception e) {
+                    //createAndShowDialog(exception, "Error");
+                    e.printStackTrace();
                 }
                 return null;
             }
@@ -201,11 +215,14 @@ public class SetNickname extends ActionBarActivity {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 //mAdapter.add(item);
+                                Intent i = new Intent(SetNickname.this, pro.onur.numgame.Menu.class);
+                                startActivity(i);
                             }
                         });
                     }
-                } catch (Exception exception) {
-                    createAndShowDialog(exception, "Error");
+                } catch (Exception e) {
+                    //createAndShowDialog(exception, "Error");
+                    e.printStackTrace();
                 }
                 return null;
             }
